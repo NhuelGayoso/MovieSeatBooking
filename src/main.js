@@ -6,7 +6,7 @@ const movieSelect = document.getElementById('movie')
 
 populateUI()
 
-let ticktePrice = movieSelect.value
+let ticktePrice = +movieSelect.value
 
 
 //! Save selected movie index and price
@@ -17,20 +17,22 @@ function setMovieData(movieIndex, moviePrice) {
 
 // !update total and count
 function updateSelectedCount() {
-  const selectedSeat = document.querySelectorAll('.row .seat.selected')
+  const selectedSeats = document.querySelectorAll('.row .seat.selected')
 
-  const seatsIndex = [...selectedSeat].map((seat) => [...seats].indexOf(seat))
+  const seatsIndex = [...selectedSeats].map((seat) => [...seats].indexOf(seat))
 
   localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex))
 
-  const selectedSeatCount = selectedSeat.length
+  const selectedSeatCount = selectedSeats.length
+
   count.innerText = selectedSeatCount
   total.innerText = selectedSeatCount * ticktePrice
 }
 
-//!get data from localstorange and populate ui
+//! Get data from localstorange and populate ui
 function populateUI() {
   const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'))
+
   if (selectedSeats !== null && selectedSeats.length > 0) {
     seats.forEach((seat, index) => {
       if (selectedSeats.indexOf(index) > -1) {
@@ -46,13 +48,14 @@ function populateUI() {
   }
 }
 
-//!movie select event\
+//! Movie select event
 movieSelect.addEventListener('change', e => {
   ticktePrice = +e.target.value
+  setMovieData(e.target.selectedIndex, e.target.value)
   updateSelectedCount()
 })
 
-//!seat click event
+//! Seat click event
 container.addEventListener('click', (e) => {
   if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
     e.target.classList.toggle('selected')
@@ -60,5 +63,5 @@ container.addEventListener('click', (e) => {
   }
 })
 
-//! initial count adn total set
+//! Initial count adn total set
 updateSelectedCount()
